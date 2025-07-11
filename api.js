@@ -2,12 +2,18 @@ const crypto = require("crypto");
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const PORT = 5000;
+const PORT = 3000;
 
 const users = [];
 
+const corsOptions = {
+  origin: 'http://185.58.115.54:3000', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cors());
 
 app.get("/api/users", async(_, resp) => resp.send(users));
 
