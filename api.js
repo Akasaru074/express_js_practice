@@ -15,16 +15,16 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.get("/api/users", async(_, resp) => resp.send(users));
+app.get(corsOptions.origin + "/api/users", async(_, resp) => resp.send(users));
 
-app.get("/api/users/:id", async(req, resp)=> {
+app.get(corsOptions.origin + "/api/users/:id", async(req, resp)=> {
     const id = req.params.id;
     const user = users.find(u => u.id === id);
     if (user) resp.send(user);
     else resp.sendStatus(404);
 });
 
-app.post("/api/users", async(req, resp)=>{
+app.post(corsOptions.origin + "/api/users", async(req, resp)=>{
 
     if (!req.body) return resp.sendStatus(400);
 
@@ -37,7 +37,7 @@ app.post("/api/users", async(req, resp)=>{
 
 });
 
-app.delete("/api/users/:id", async(req,resp)=>{
+app.delete(corsOptions.origin + "/api/users/:id", async(req,resp)=>{
 
     const id = req.params.id;
     let index = users.findIndex(u => u.id === id);
@@ -50,7 +50,7 @@ app.delete("/api/users/:id", async(req,resp)=>{
 
 });
 
-app.put("/api/users", async(req, resp)=>{
+app.put(corsOptions.origin + "/api/users", async(req, resp)=>{
     if (!req.body) return resp.sendStatus(400);
 
     const id = req.body.id;
