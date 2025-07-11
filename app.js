@@ -1,35 +1,69 @@
+const crypto = require("crypto");
 const express = require('express');
-const fs = require("fs");
 const app = express();
 const PORT = 5000;
 
-fs.writeFile("server.log", "", err => {
-    if (err) console.error(err);
+const users = [];
+
+app.use(express.json());
+app.use(express.static("public"));
+
+app.get("/api/users", async(_, resp) => resp.send(users));
+
+app.get("/api/users/:id", async(req, resp)=> {
+    const id = req.params.id;
+    const user = users.find(u => u.id === id);
+    if (user) resp.send(user);
+    else resp.sendStatus(404);
 });
 
-app.use((req, resp, next)=>{
+app.post("/api/users", async(req, resp)=>{
 
-    const now = new Date;
-    const hour = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-    const data = `${hour}:${minutes}:${seconds} ${req.method} ${req.url} ${req.get('user-agent')}`;
-    // console.log(data);
-    fs.appendFile("server.log", data + "\n", err => {
-        if (err) return console.error(err);
-        // console.log("File written succesfully");
-    });
-    next();
-    
+    if (!req.body) return resp.sendStatus(400);
+
+    const userName = req.body.name;
+    const userAge = req.body.age;
+    const user = {id: crypto.randomUUID(), name: userName, age: userAge};
+
+    users.push(user);
+    resp.send(user);
+
 });
 
-app.use(express.static(__dirname + "/public"));
+app.delete("/api/users/:id", async(req,resp)=>{
 
-// app.get('/', (_, resp)=>{
-//     resp.sendFile(__dirname + "/index.html");
-// });
+    const id = req.params.id;
+    let index = users.findIndex(u => u.id === id);
+    if (index > -1) {
+        const user = users.splice(index, 1)[0];
+        resp.send(user);
+    } else {
+        resp.status(404).send("User not found");
+    }
+
+});
+
+app.put("/api/users", async(req, resp)=>{
+
+    if (!req.body) return resp.sendStatus(400);
+
+    const id = req.body.id;
+    const userName = req.body.name;
+    const userAge = req.body.age;
+
+    const index = users.findIndex(u => u.id === id);
+    if (index > -1) {
+        const user = users[index];
+        user.name = userName;
+        user.age = userAge;
+        resp.send(user);
+    } else {
+        resp.status(404).send("User not found");
+    }
+
+});
+
 
 app.listen(PORT, ()=>{
     console.log(`Server listening on port ${PORT}...`);
-})
-
+});
