@@ -15,16 +15,16 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.get(corsOptions.origin + "/api/users", async(_, resp) => resp.send(users));
+app.get("http://185.58.115.54:3000/api/users", async(_, resp) => resp.send(users));
 
-app.get(corsOptions.origin + "/api/users/:id", async(req, resp)=> {
+app.get("http://185.58.115.54:3000/api/users/:id", async(req, resp)=> {
     const id = req.params.id;
     const user = users.find(u => u.id === id);
     if (user) resp.send(user);
     else resp.sendStatus(404);
 });
 
-app.post(corsOptions.origin + "/api/users", async(req, resp)=>{
+app.post("http://185.58.115.54:3000/api/users", async(req, resp)=>{
 
     if (!req.body) return resp.sendStatus(400);
 
@@ -37,7 +37,7 @@ app.post(corsOptions.origin + "/api/users", async(req, resp)=>{
 
 });
 
-app.delete(corsOptions.origin + "/api/users/:id", async(req,resp)=>{
+app.delete("http://185.58.115.54:3000/api/users/:id", async(req,resp)=>{
 
     const id = req.params.id;
     let index = users.findIndex(u => u.id === id);
@@ -50,7 +50,7 @@ app.delete(corsOptions.origin + "/api/users/:id", async(req,resp)=>{
 
 });
 
-app.put(corsOptions.origin + "/api/users", async(req, resp)=>{
+app.put("http://185.58.115.54:3000/api/users", async(req, resp)=>{
     if (!req.body) return resp.sendStatus(400);
 
     const id = req.body.id;
