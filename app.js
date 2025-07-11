@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const express = require('express');
 const app = express();
-const PORT = 80;
+const PORT = 5000;
 
 const users = [];
 
@@ -11,6 +11,9 @@ app.use(express.static("public"));
 app.get("/api/users", async(_, resp) => resp.send(users));
 
 app.get("/api/users/:id", async(req, resp)=> {
+
+    resp.setHeader("Access-Control-Allow-Origin", "*");
+
     const id = req.params.id;
     const user = users.find(u => u.id === id);
     if (user) resp.send(user);
@@ -18,6 +21,9 @@ app.get("/api/users/:id", async(req, resp)=> {
 });
 
 app.post("/api/users", async(req, resp)=>{
+
+    resp.setHeader("Access-Control-Allow-Origin", "*");
+
 
     if (!req.body) return resp.sendStatus(400);
 
@@ -32,6 +38,8 @@ app.post("/api/users", async(req, resp)=>{
 
 app.delete("/api/users/:id", async(req,resp)=>{
 
+    resp.setHeader("Access-Control-Allow-Origin", "*");
+
     const id = req.params.id;
     let index = users.findIndex(u => u.id === id);
     if (index > -1) {
@@ -44,6 +52,8 @@ app.delete("/api/users/:id", async(req,resp)=>{
 });
 
 app.put("/api/users", async(req, resp)=>{
+
+    resp.setHeader("Access-Control-Allow-Origin", "*");
 
     if (!req.body) return resp.sendStatus(400);
 
